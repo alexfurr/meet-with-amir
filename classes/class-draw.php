@@ -158,6 +158,8 @@ class mwa_draw
             $html.='<table class="imperial-table">';
 
 
+
+
             foreach ( $month_dates as $this_date)
             {
 
@@ -165,18 +167,23 @@ class mwa_draw
                 $daystr =  $datetime->format('l jS F, Y');
 
                 // Get thet students on this date
+                $my_students = array();
                 if(isset($all_bookings_array[$this_date]) )
                 {
                     $my_students = $all_bookings_array[$this_date];
                 }
-
 
                 if($i==1)
                 {
                     $next_meeting.='<h2>Next Meeting : '.$daystr.'</h2>';
                     $next_meeting.='You are meeting with:<br/>';
 
-                    $today_array = array("ja2315", "ra3615", "ka1915", "mja215");
+                    $today_array = $my_students;
+
+                    if(count($today_array)==0 )
+                    {
+                        $next_meeting.= '<strong>You have no students today.</strong>';
+                    }
 
                     $next_meeting.='<div class="imperial-flex-container">';
                     foreach ($today_array as $username)
@@ -205,18 +212,22 @@ class mwa_draw
 
                     if(count($my_students)==0)
                     {
-                        $html.= '<td>New students found</td>';
+                        $html.= '<td>No students found</td>';
                     }
                     else
                     {
                         $html.= '<td>';
 
-                        foreach ($my_students as $student_info)
+                        foreach ($my_students as $username)
                         {
-                            $username = $student_info->username;
-                            $fullname = $student_info->fullname;
+                            $student_info = imperialQueries::getUserInfo($username);
+                            $full_name = $student_info['first_name'].' '.$student_info['last_name'];
+                            $cid = $student_info['userID'];
 
-                            $html.= $fullname.', ';
+                            $args = array("cid" => $cid);
+                            $avatar_url = get_user_avatar_url( $args );
+
+                            $html.= $full_name.', ';
                         }
                         $html.= '</td>';
 
@@ -263,7 +274,11 @@ class mwa_draw
        if(isset($_GET['feedback']) )
        {
            $feedback = $_GET['feedback'];
-           $type = $_GET['feedback_type'];
+           $type = '';
+           if(isset($_GET['type']) )
+           {
+               $type = $_GET['feedback_type'];
+           }
 
            // Firstly check if there is anyt feedback
 

@@ -46,8 +46,9 @@ class mwa_utils
 
 
 
-    function sendIcalEvent($meeting_date, $username)
+    public static function sendIcalEvent($meeting_date, $location, $username)
     {
+
 
         $meeting_date_time = $meeting_date." 17:00";
         $end_date_time = $meeting_date." 19:15";
@@ -55,26 +56,30 @@ class mwa_utils
 
         // Create unique ID for this item
         $UID = md5(uniqid(mt_rand(), true)) . "@medlearn.imperial.ac.uk\r\n";
-    	$location = "TBC";
 
     	$subject = 'Meeting with Dr Amir Sam';
+        $from_name = "Dr Sam Amir (via MedLearn)";
+        $from_address = "DoNotReply@medlearn.imperial.ac.uk";
     	$method="REQUEST";
     	$status="CONFIRMED";
 
         $message_body = "Thanks for booking a meeting with Dr Amir Sam<br/>";
+        $message_body.= "If you cannot make this meeting please cancel via the website:<br/>";
+        $message_body.= "<a href='https://medlearn.imperial.ac.uk/dr-sam/'>Meet With Dr Sam/</a>";
 
     	$student_info = imperialQueries::getUserInfo($username);
-    	$student_name = $student_info['first_name'].' '.$tuteeInfo['last_name'];
+    	$student_name = $student_info['first_name'].' '.$student_info['last_name'];
     	$student_email = $student_info['email'];
 
 
-    	$from_name = "MedLearn";
-    	$from_address = "NoNotReply@medlearn.imperial.ac.uk";
+
 
         //Create Email Headers
         $mime_boundary = "----Meeting Booking----".MD5(TIME());
 
     	$headers='';
+        $message='';// Create var for the message
+
         //$headers = "From: ".$from_name." <".$from_address.">\n";
         //$headers .= "Reply-To: ".$tuteeName." <".$tuteeEmail.">\n";
         $headers .= "MIME-Version: 1.0\n";
@@ -104,10 +109,12 @@ class mwa_utils
     	$dt->setTimeZone(new DateTimeZone($tz_to));
     	$startDateICS =  $dt->format($format) . "\n";
 
+
     	// Create End Date
         $dt = new DateTime($end_date_time, new DateTimeZone($tz_from));
         $dt->setTimeZone(new DateTimeZone($tz_to));
         $endDateICS =  $dt->format($format) . "\n";
+
 
         $ical = 'BEGIN:VCALENDAR' . "\r\n" .
         'PRODID:-//Microsoft Corporation//Outlook 10.0 MIMEDIR//EN' . "\r\n" .
@@ -117,7 +124,7 @@ class mwa_utils
 
         'BEGIN:VEVENT' . "\r\n" .
         'ORGANIZER;CN="'.$from_name.'":MAILTO:'.$from_address. "\r\n" .
-        'ATTENDEE;CN="'.$to_name.'";ROLE=REQ-PARTICIPANT\r\n"' .
+        'ATTENDEE;CN="'.$student_email.'";ROLE=REQ-PARTICIPANT\r\n"' .
         'LAST-MODIFIED:' . date("Ymd\TGis") . "\r\n" .
         'UID:'.$UID."\r\n" .
         'DTSTAMP:'.date("Ymd\TGis"). "\r\n" .
@@ -141,10 +148,19 @@ class mwa_utils
         $message .= 'Content-Type: text/calendar;name="meeting.ics";method=REQUEST'."\n";
         $message .= "Content-Transfer-Encoding: 8bit\n\n";
         $message .= $ical;
-        $mailsent = mail($to_address, $subject, $message, $headers);
+       // $mailsent = mail($to_address, $subject, $message, $headers);
+
+
+        $mailsent = mail( $student_email, $subject, $message, $headers );
+
+
+
 
         return ($mailsent)?(true):(false);
     }
+
+
+
 
 
 }

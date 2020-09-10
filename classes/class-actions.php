@@ -46,8 +46,26 @@ class mwa_actions
             )
         ));
 
+
+
+
         // Also send the invite
-        mwa_utils::sendIcalEvent($date, $logged_in_username);
+        //mwa_utils::test_message();
+
+        // Process the location
+        if($date<="2020-10-23")
+        {
+            $this_location = "CX Reynolds R2/3";
+        }
+        else
+        {
+            $this_location = "CCX lab block 7th floor clinical skills suite";
+        }
+
+
+        mwa_utils::sendIcalEvent($date, $this_location, $logged_in_username);
+
+
 
         return array(
             "type" => "success",
@@ -58,7 +76,7 @@ class mwa_actions
 
     public static function booking_delete()
     {
-        $can_delete==false;
+        $can_delete=false;
         $logged_in_username = imperialNetworkUtils::get_current_username();
         $booking_id = $_GET['id'];
 
