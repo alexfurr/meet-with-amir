@@ -11,6 +11,11 @@ class mwa_draw
 
         $html.='<div id="mwa_listener_wrap">';
 
+        if(current_user_can('edit_pages') ) // If they are not editor then don't show
+        {
+            $html.="<a href='amirs-dashboard' class='imperial-button'>Amir's dashboard</a><hr/>";
+        }
+
 
         // Does this student have a booking?
         $logged_in_username = imperialNetworkUtils::get_current_username();
@@ -142,6 +147,10 @@ class mwa_draw
     public static function draw_amir_dashboard()
     {
 
+        if(!current_user_can('edit_pages') ) // If they are not editor then don't show
+        {
+            return;
+        }
         $html='';
         $next_meeting = '';
 
