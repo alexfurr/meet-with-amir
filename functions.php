@@ -46,6 +46,7 @@ class mwa_functions
 
         // Register Ajax script for front end
         wp_enqueue_script('mwa_scripts', MWA_PLUGIN_URL.'/js/scripts.js', array( 'jquery' ) ); #Custom AJAX functions
+        wp_enqueue_style('mwa_styles', MWA_PLUGIN_URL.'/css/styles.css', '', '1.1' );
 
         //Localise the JS file
         /*
@@ -142,7 +143,7 @@ class mwa_functions
                     break;
 
                     case "create_slot":
-                         $html= imperialNetworkDraw::imperialFeedback("Slot created");
+                         $html= imperialNetworkDraw::imperialFeedback("Slots created");
                     break;
 
                     case "deleted_slot":

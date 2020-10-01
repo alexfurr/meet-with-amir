@@ -69,9 +69,11 @@ class mwa_draw
         $all_bookings_array = mwa_queries::get_all_bookings_by_day();
 
         // Now go through the months and spit them out
+        $exit_next_row = false; // Use this to see if we need to exit if all slots are not filled for this date
+
         foreach($month_array as $this_month => $month_date_array)
         {
-
+            if($exit_next_row==true){break;}
 
             $this_month_id = 'month_'.$this_month;
             $html.='<h2 class="accordionHeading" rel="'.$this_month_id.'">'.$this_month.'</h2>';
@@ -79,6 +81,8 @@ class mwa_draw
             $temp_table_content='<table class="imperial-table">';
             foreach ($month_date_array as $this_date)
             {
+
+                if($exit_next_row==true){break;}
 
                 $datetime = DateTime::createFromFormat('Y-m-d', $this_date);
                 $daystr =  $datetime->format('l jS F, Y');
@@ -100,6 +104,13 @@ class mwa_draw
                 if($bookings_available==0)
                 {
                     $class = 'failText';
+                }
+
+                //echo '$bookings_made = '.$bookings_made.'<br/>';
+
+                if($bookings_made<5)
+                {
+                    $exit_next_row=true;
                 }
 
 
@@ -151,7 +162,63 @@ class mwa_draw
         {
             return;
         }
+
+
+        // Has the form been submitted?
+
+        if(isset($_GET['action']) )
+        {
+            $start_date = $_POST['start_date'];
+            $end_date = $_POST['end_date'];
+
+            update_option("amir_start_date", $start_date);
+            update_option("amir_end_date", $end_date);
+        }
+
+
+
         $html='';
+
+
+        // get the date options
+        $start_date = get_option('amir_start_date');
+        $end_date = get_option('amir_end_date');
+
+
+        echo '<form action="?action=update_slot_dates" method="post" class="imperial-form">';
+
+        echo '<div class="form_dates_wrap">';
+        echo '<div>';
+        $args = array(
+        "type" => "date",
+        "name" => "start_date",
+        "value" => $start_date,
+        "ID" => "start_date",
+        "label" => "Slots Start Date",
+        );
+        echo mwa_draw::form_item($args);
+        echo '</div>';
+
+        echo '<div>';
+
+        $args = array(
+        "type" => "date",
+        "name" => "end_date",
+        "value" => $end_date,
+        "ID" => "end_date",
+        "label" => "Slots End Date",
+        );
+        echo mwa_draw::form_item($args);
+        echo '</div>';
+        echo '</div>';
+
+
+
+        echo '<input type="submit" value="Update Slot Dates" >';
+        echo '</form>';
+
+
+
         $next_meeting = '';
 
         $month_array = mwa_utils::get_dates();
@@ -195,23 +262,43 @@ class mwa_draw
                     }
 
                     $next_meeting.='<div class="imperial-flex-container">';
+                    $email_str = '';
                     foreach ($today_array as $username)
                     {
                         $student_info = imperialQueries::getUserInfo($username);
                         $full_name = $student_info['first_name'].' '.$student_info['last_name'];
                         $cid = $student_info['userID'];
+                        $email = $student_info['email'];
 
-                        $args = array("cid" => $cid);
-                        $avatar_url = get_user_avatar_url( $args );
+                        $email_str.=$email.';';
 
+
+                        // Get the user avatar
+                        $args = array(
+                            "CID"		=> $cid,
+                            'size'	=> "square",
+                        );
+
+                        $avatar_url = get_user_avatar_url( $args);
+                        $hash = create_hash();
+                        $avatar_url = $avatar_url.'?hash='.$hash;
+
+                        $next_meeting.='<a href="https://medlearn.imperial.ac.uk/profile/?username='.$username.'">';
                         $next_meeting.='<div class="mwa_student_wrap" style="text-align:center">';
                         $next_meeting.='<img src="'.$avatar_url.'" width="80px"><br/>';
                         $next_meeting.= $full_name.'<br/>';
                         $next_meeting.='<span class="smallText">'.$cid.'</span>';
                         $next_meeting.='</div>';
+                        $next_meeting.='</a>';
                     }
 
+
+
                     $next_meeting.='</div>';
+                    if($email_str)
+                    {
+                        $next_meeting.= '<a href="mailto:'.$email_str.'" class="imperial-button">Email these students</a>';
+                    }
                 }
                 else
                 {
@@ -312,6 +399,54 @@ class mwa_draw
 
 
    }
+
+   public static function form_item($args = array())
+    {
+
+        $html = '<div class="ek_form_item">';
+        $value = '';
+        $required = '';
+
+        $type = $args['type'];
+        $ID = $args['ID'];
+        $label = $args['label'];
+
+        // If no name is given the ID will be the name
+        $name = $args['ID'];
+        if(isset($args['name']) ){$name = $args['name'];}
+        if(isset($args['value']) ){$value = $args['value'];}
+        if(isset($args['required']) ){$required = $args['required'];}
+
+        switch ($type)
+        {
+
+
+
+
+
+            case "date":
+                if($value==""){$value = date('Y-m-d');}
+
+                $html.= '<label for="'.$ID.'">'.$label.'</label>';
+                $html.=  '<input type="text" name="'.$ID.'" id="'.$ID.'" value="'.$value.'"/>';
+                $html.=  '<script>
+                jQuery(function() {
+                    jQuery( "#'.$ID.'" ).datepicker({
+                        dateFormat : "yy-mm-dd"
+                    });
+                });
+                </script>';
+            break;
+
+
+
+        }
+
+        $html.='</div>';
+
+        return $html;
+
+    }
 
 }
 

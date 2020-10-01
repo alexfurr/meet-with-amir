@@ -55,7 +55,7 @@ class mwa_actions
         // Process the location
         if($date<="2020-10-23")
         {
-            $this_location = "CX Reynolds R2/3";
+            $this_location = "CX Reynolds R1";
         }
         else
         {

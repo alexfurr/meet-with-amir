@@ -4,8 +4,10 @@ class mwa_utils
     public static function get_dates()
     {
 
-        $start_date = '2020-10-01';
-        $end_date = '2020-11-30';
+
+        $start_date = get_option('amir_start_date');
+        $end_date = get_option('amir_end_date');
+
 
         $today = date('Y-m-d');
 
