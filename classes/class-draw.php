@@ -270,7 +270,8 @@ class mwa_draw
                         $cid = $student_info['userID'];
                         $email = $student_info['email'];
 
-                        $email_str.=$email.';';
+                        $email_str1.=$email.',';
+                        $email_str2.=$email.';';
 
 
                         // Get the user avatar
@@ -295,9 +296,9 @@ class mwa_draw
 
 
                     $next_meeting.='</div>';
-                    if($email_str)
+                    if($email_str1)
                     {
-                        $next_meeting.= '<a href="mailto:'.$email_str.'" class="imperial-button">Email these students</a>';
+                        $next_meeting.= '<a href="mailto:'.$email_str1.'" class="imperial-button">Email these students</a>';
                     }
                 }
                 else
