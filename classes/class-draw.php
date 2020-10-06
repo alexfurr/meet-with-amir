@@ -299,8 +299,8 @@ class mwa_draw
                     $next_meeting.='</div>';
                     if($email_str1)
                     {
-                       // $next_meeting.= '<a href="mailto:'.$email_str1.'" class="imperial-button">Email these students</a>' ;
-                        $next_meeting.= '<a href="mailto:'.$email_str2.'" class="imperial-button">Email these students (option2 )</a>';
+                        $next_meeting.= '<a href="mailto:'.$email_str1.'" class="imperial-button">Email these students (From Phone)</a>' ;
+                        $next_meeting.= '<a href="mailto:'.$email_str2.'" class="imperial-button">Email these students</a>';
                        // $next_meeting.='<br>'.$email_str2;
 
                     }
