@@ -335,7 +335,7 @@ class mwa_draw
 
                             $html.= $full_name.', ';
                         }
-                        $html.='<br/><a href="mailto:'.$email_link.'" class="smalltext">Email these students</a>';
+                        $html.='<br/><a href="mailto:'.$email_link.'" class="smallText">Email these students</a>';
                         $html.= '</td>';
 
                     }
