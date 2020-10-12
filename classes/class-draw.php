@@ -319,17 +319,23 @@ class mwa_draw
                     {
                         $html.= '<td>';
 
+
+                        $email_link='';
+
                         foreach ($my_students as $username)
                         {
                             $student_info = imperialQueries::getUserInfo($username);
                             $full_name = $student_info['first_name'].' '.$student_info['last_name'];
                             $cid = $student_info['userID'];
+                            $email = $student_info['email'];
+                            $email_link.=$email.',';
 
                             $args = array("cid" => $cid);
                             $avatar_url = get_user_avatar_url( $args );
 
                             $html.= $full_name.', ';
                         }
+                        $html.='<br/><a href="mailto:'.$email_link.'" class="smalltext">Email these students</a>';
                         $html.= '</td>';
 
                     }
