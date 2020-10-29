@@ -53,6 +53,7 @@ class mwa_actions
         //mwa_utils::test_message();
 
         // Process the location
+        /*
         if($date<="2020-10-23")
         {
             $this_location = "CX Reynolds R1";
@@ -61,6 +62,10 @@ class mwa_actions
         {
             $this_location = "CCX lab block 7th floor clinical skills suite";
         }
+        */
+
+        $this_location = "CX Reynolds R1";
+
 
 
         mwa_utils::sendIcalEvent($date, $this_location, $logged_in_username);

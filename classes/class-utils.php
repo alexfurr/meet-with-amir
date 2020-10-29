@@ -123,7 +123,6 @@ class mwa_utils
         'VERSION:2.0' . "\r\n" .
         'METHOD:'.$method. "\r\n" .
 
-
         'BEGIN:VEVENT' . "\r\n" .
         'ORGANIZER;CN="'.$from_name.'":MAILTO:'.$from_address. "\r\n" .
         'ATTENDEE;CN="'.$student_email.'";ROLE=REQ-PARTICIPANT\r\n"' .
