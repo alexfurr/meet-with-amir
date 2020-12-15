@@ -176,19 +176,40 @@ class mwa_draw
         }
 
 
+        // Calculate all the student percentage
+        $y6_students = imperialQueries::getStudentsByYOS(6);
+        $total_students = count($y6_students);
+
+        $booked_students = mwa_queries::get_all_bookings_so_far();
+        $booked_count = count($booked_students);
+
+        $percentage = round((($booked_count/$total_students)*100), 2);
+
 
         $html='';
 
+        $args = array(
+            "number" => $percentage,
+            "text"  => $percentage.'%',
+        );
+        $html.='<div style="display:flex; align-items:center;">';
+        $html.='<div style="width:100px">';
+        $html.=imperialNetworkDraw::drawRadialProgress($args);
+        $html.='</div>';
+        $html.='<div>';
+        $html.='You have seen '.$booked_count.' out of '.$total_students.' students ('.$percentage.'%)';
+        $html.='</div>';
+        $html.='</div>';
 
         // get the date options
         $start_date = get_option('amir_start_date');
         $end_date = get_option('amir_end_date');
 
 
-        echo '<form action="?action=update_slot_dates" method="post" class="imperial-form">';
+        $html.= '<form action="?action=update_slot_dates" method="post" class="imperial-form">';
 
-        echo '<div class="form_dates_wrap">';
-        echo '<div>';
+        $html.= '<div class="form_dates_wrap">';
+        $html.= '<div>';
         $args = array(
         "type" => "date",
         "name" => "start_date",
@@ -196,10 +217,10 @@ class mwa_draw
         "ID" => "start_date",
         "label" => "Slots Start Date",
         );
-        echo mwa_draw::form_item($args);
-        echo '</div>';
+        $html.= mwa_draw::form_item($args);
+        $html.= '</div>';
 
-        echo '<div>';
+        $html.= '<div>';
 
         $args = array(
         "type" => "date",
@@ -208,14 +229,14 @@ class mwa_draw
         "ID" => "end_date",
         "label" => "Slots End Date",
         );
-        echo mwa_draw::form_item($args);
-        echo '</div>';
-        echo '</div>';
+        $html.= mwa_draw::form_item($args);
+        $html.= '</div>';
+        $html.= '</div>';
 
 
 
-        echo '<input type="submit" value="Update Slot Dates" >';
-        echo '</form>';
+        $html.= '<input type="submit" value="Update Slot Dates" >';
+        $html.= '</form>';
 
 
 

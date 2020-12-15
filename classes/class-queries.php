@@ -58,6 +58,22 @@ class mwa_queries
 
         return $all_bookings_array;
     }
+
+    // Returns an array of bookings with the student usernames asn an array and the date as the key
+    public static function get_all_bookings_so_far()
+    {
+        global $wpdb;
+        global $mwa_bookings;
+
+        $today = date('Y-m-d');
+
+        $all_bookings_array = array();
+        $sql = "SELECT * FROM $mwa_bookings WHERE booking_date<'$today'";
+        $all_bookings =  $wpdb->get_results( $sql );
+
+
+        return $all_bookings;
+    }
 }
 
 
