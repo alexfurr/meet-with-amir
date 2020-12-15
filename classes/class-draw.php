@@ -183,7 +183,7 @@ class mwa_draw
         $booked_students = mwa_queries::get_all_bookings_so_far();
         $booked_count = count($booked_students);
 
-        $percentage = round((($booked_count/$total_students)*100), 2);
+        $percentage = round((($booked_count/$total_students)*100), 0);
 
 
         $html='';
