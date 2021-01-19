@@ -69,11 +69,11 @@ class mwa_draw
         $all_bookings_array = mwa_queries::get_all_bookings_by_day();
 
         // Now go through the months and spit them out
-        $exit_next_row = false; // Use this to see if we need to exit if all slots are not filled for this date
+       // $exit_next_row = false; // Use this to see if we need to exit if all slots are not filled for this date
 
         foreach($month_array as $this_month => $month_date_array)
         {
-            if($exit_next_row==true){break;}
+           // if($exit_next_row==true){break;}
 
             $this_month_id = 'month_'.$this_month;
             $html.='<h2 class="accordionHeading" rel="'.$this_month_id.'">'.$this_month.'</h2>';
@@ -82,7 +82,7 @@ class mwa_draw
             foreach ($month_date_array as $this_date)
             {
 
-                if($exit_next_row==true){break;}
+               // if($exit_next_row==true){break;}
 
                 $datetime = DateTime::createFromFormat('Y-m-d', $this_date);
                 $daystr =  $datetime->format('l jS F, Y');
