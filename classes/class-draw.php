@@ -181,6 +181,30 @@ class mwa_draw
         $total_students = count($y6_students);
 
         $booked_students = mwa_queries::get_all_bookings_so_far();
+
+        //create an array containing just the usernames
+        $username_lookup_array = array();
+        foreach ($y6_students as $student_info)
+        {
+            $info_array = array(
+                "name"  => $student_info['first_name'].' '.$student_info['last_name'],
+                "email" => $student_info['email'],
+
+            );
+            $username_lookup_array[$student_info['username']] = $info_array;
+        }
+
+        // Go through the booked students and remove frmo the lookup array and that exist
+        foreach ($booked_students as $student_info)
+        {
+            $check_username =$student_info->username;
+            unset($username_lookup_array[$check_username]);
+        }
+
+
+
+
+
         $booked_count = count($booked_students);
 
         $percentage = round((($booked_count/$total_students)*100), 0);
@@ -237,6 +261,18 @@ class mwa_draw
 
         $html.= '<input type="submit" value="Update Slot Dates" >';
         $html.= '</form>';
+
+
+        $html.= '<h2>Students yet to attend</h2>';
+        $html.= '<table class="imperial-table">';
+        foreach ($username_lookup_array as $not_yet_attended_students)
+        {
+            $html.= '<tr>';
+            $html.= '<td>'.$not_yet_attended_students['name'].'</td>';
+            $html.= '<td>'.$not_yet_attended_students['email'].'</td>';
+            $html.= '</tr>';
+        }
+        $html.= '</table>';
 
 
 
