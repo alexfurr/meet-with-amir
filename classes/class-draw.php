@@ -98,7 +98,7 @@ class mwa_draw
                 }
 
 
-                $bookings_available = 5-$bookings_made;
+                $bookings_available = 6-$bookings_made;
 
 
                 if($bookings_available==0)
@@ -108,7 +108,7 @@ class mwa_draw
 
                 //echo '$bookings_made = '.$bookings_made.'<br/>';
 
-                if($bookings_made<5)
+                if($bookings_made<6)
                 {
                     $exit_next_row=true;
                 }
@@ -116,7 +116,7 @@ class mwa_draw
 
                 $temp_table_content.= '<tr>';
                 $temp_table_content.='<td>'.$daystr.'</td>';
-                $temp_table_content.='<td><span class="'.$class.'">'.$bookings_available.' / 5 slots available</span></td>';
+                $temp_table_content.='<td><span class="'.$class.'">'.$bookings_available.' / 6 slots available</span></td>';
                 $temp_table_content.='<td>';
                 if($bookings_available>=1)
                 {
