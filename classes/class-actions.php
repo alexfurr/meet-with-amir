@@ -21,7 +21,7 @@ class mwa_actions
         $booking_count = count($this_date_bookings);
 
 
-        if($booking_count>=5)
+        if($booking_count>=6)
         {
             return array(
                 "type" => "error",
